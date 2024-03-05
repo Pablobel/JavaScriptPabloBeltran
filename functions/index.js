@@ -22,9 +22,10 @@ const logger = require("firebase-functions/logger");
 const admin = require('firebase-admin');
 admin.initializeApp();
 
+//URL para insertar https://insertelement-we5ef7bfvq-uc.a.run.app
 exports.insertElement = onRequest(async (request, response) => {
-  // Assuming Firestore is being used as the database
-  const data = request.body; // Assuming the element data is in the request body
+  
+  const data = request.body; 
   
   try {
       const docRef = await admin.firestore().collection('Prueba').add(data);
@@ -32,5 +33,25 @@ exports.insertElement = onRequest(async (request, response) => {
   } catch (error) {
       console.error("Error inserting document: ", error);
       response.status(500).send("Error inserting the element");
+  }
+});
+
+//Ejercicio 2
+
+//URL para eliminar https://deleteelement-we5ef7bfvq-uc.a.run.app/?id=
+exports.deleteElement = onRequest(async (request, response) => {
+  
+  const elementId = request.query.id || request.body.id; 
+
+  if (!elementId) {
+      return response.status(400).send('Es necesario proporcionar el ID del elemento a eliminar.');
+  }
+
+  try {
+      await admin.firestore().collection('Prueba').doc(elementId).delete();
+      response.send(`El elemento con ID ${elementId} fue eliminado correctamente`);
+  } catch (error) {
+      console.error("Error eliminando el elemento: ", error);
+      response.status(500).send("Error eliminando el elemento");
   }
 });
