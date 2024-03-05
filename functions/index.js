@@ -55,3 +55,23 @@ exports.deleteElement = onRequest(async (request, response) => {
       response.status(500).send("Error eliminando el elemento");
   }
 });
+
+//Ejercicio 3
+
+//URL para ver todos los elementos https://getall-we5ef7bfvq-uc.a.run.app
+exports.getAll = onRequest(async (request, response) => {
+  try {
+      const collectionRef = admin.firestore().collection('Prueba');
+      const snapshot = await collectionRef.get();
+      const elements = [];
+
+      snapshot.forEach(doc => {
+          elements.push({ id: doc.id, ...doc.data() });
+      });
+
+      response.json(elements);
+  } catch (error) {
+      console.error("Error al obtener los elementos: ", error);
+      response.status(500).send("Error al obtener los elementos");
+  }
+});
