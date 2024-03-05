@@ -75,3 +75,14 @@ exports.getAll = onRequest(async (request, response) => {
       response.status(500).send("Error al obtener los elementos");
   }
 });
+
+//Ejercicio 4
+
+const functions = require('firebase-functions');
+exports.agregarTimeStamp = functions.firestore
+    .document('Prueba/{id}')
+    .onCreate((snap, context) => {
+        const data = snap.data();
+        const timeStamp = admin.firestore.FieldValue.serverTimestamp();
+        return snap.ref.update({ timeStamp });
+    });
