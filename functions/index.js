@@ -19,28 +19,18 @@ const logger = require("firebase-functions/logger");
  });
 
 //Ejercicio 1
-const admin = require("firebase-admin");
-
+const admin = require('firebase-admin');
 admin.initializeApp();
 
-const db = admin.firestore();
-
-//Trigger
 exports.insertElement = onRequest(async (request, response) => {
+  // Assuming Firestore is being used as the database
+  const data = request.body; // Assuming the element data is in the request body
   
-  if (request.method !== "POST") {
-      response.status(405).send('Método HTTP no permitido');
-      return;
-  }
-
   try {
-      
-      const docRef = await db.collection('Prueba').add(request.body);
-
-      logger.info(`Elemento con ID ${docRef.id} fue insertado correctamente`, {structuredData: true});
+      const docRef = await admin.firestore().collection('Prueba').add(data);
       response.send(`Elemento con ID ${docRef.id} fue insertado correctamente`);
   } catch (error) {
-      logger.error('Error insertando el documento', {error: error});
-      response.status(500).send('Error al insertar el documento');
+      console.error("Error inserting document: ", error);
+      response.status(500).send("Error inserting the element");
   }
 });
