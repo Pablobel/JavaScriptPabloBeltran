@@ -86,3 +86,16 @@ exports.agregarTimeStamp = functions.firestore
         const timeStamp = admin.firestore.FieldValue.serverTimestamp();
         return snap.ref.update({ timeStamp });
     });
+
+    //Ejercicio 5
+
+    exports.moverAEliminados = functions.firestore
+    .document('Prueba/{id}')
+    .onDelete(async (snap, context) => {
+        const timeStamp = admin.firestore.FieldValue.serverTimestamp();
+        await admin.firestore().collection('Archivo').doc(context.params.id).set({
+            ...snap.data(),
+            timeStamp
+        });
+        await snap.ref.delete();
+    });
